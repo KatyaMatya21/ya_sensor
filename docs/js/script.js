@@ -72,13 +72,20 @@ var imageWidth = image.offsetWidth;
 image.style.left = '0px';
 
 var currentGesture = null;
+var fingers = [];
 
-window.addEventListener('resize', function() {
+var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
+};
+
+window.addEventListener('resize', function() {
+  moveToStartPosition();
 });
 
 imageContainer.addEventListener('pointerdown', function (event) {
+  fingers.push(event.pointerId);
+
   imageContainer.setPointerCapture(event.pointerId);
 
   currentGesture = {
@@ -91,27 +98,40 @@ imageContainer.addEventListener('pointermove', function (event) {
     return
   }
 
-  var startX = currentGesture.startX;
-  var x = event.x;
-  var dx = x - startX;
-  var left = image.style.left.replace('px', '') * 1;
+  if (fingers.length === 2) {
 
-  dx > 0 ? left += Math.abs(dx) : left -= Math.abs(dx);
+    // pinch
+    document.querySelector('body').style.background = 'red';
 
-  if (left > 0) {
-    left = 0;
+  } else {
+
+    // move
+    var startX = currentGesture.startX;
+    var x = event.x;
+    var dx = x - startX;
+    var left = image.style.left.replace('px', '') * 1;
+
+    dx > 0 ? left += Math.abs(dx) : left -= Math.abs(dx);
+
+    if (left > 0) {
+      left = 0;
+    }
+
+    if (left < imageWindow - imageWidth) {
+      left = imageWindow - imageWidth;
+    }
+
+    image.style.left = left + 'px';
+    currentGesture.startX = x;
+
   }
-
-  if (left < imageWindow - imageWidth) {
-    left = imageWindow - imageWidth;
-  }
-
-  image.style.left = left + 'px';
-  currentGesture.startX = x;
 });
 
-
-imageContainer.addEventListener('pointerup', function () {
+imageContainer.addEventListener('pointerup', function (event) {
   currentGesture = null;
+
+  fingers.splice(fingers.indexOf(event.pointerId), 1);
 });
+
+imageContainer.addEventListener('pointercancel', moveToStartPosition);
 
