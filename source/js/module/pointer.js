@@ -12,6 +12,8 @@ var fingers = [];
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
+  fingers = [];
+  currentGesture = null;
 };
 
 window.addEventListener('resize', function() {
