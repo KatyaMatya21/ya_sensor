@@ -622,6 +622,12 @@ input[type="radio"].visually-hidden {
     line-height: 2.3333333333333335rem;
   }
 }
+.module__name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .module__icon {
   position: absolute;
   top: 50%;

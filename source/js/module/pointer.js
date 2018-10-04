@@ -35,10 +35,13 @@ imageContainer.addEventListener('pointermove', function (event) {
     return
   }
 
-  if (fingers.length === 2) {
+  if (fingers.length > 1) {
 
     // pinch
     document.querySelector('body').style.background = 'red';
+
+    // rotate
+    document.querySelector('body').style.background = 'blue';
 
   } else {
 
