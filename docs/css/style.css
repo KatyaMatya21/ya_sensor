@@ -734,7 +734,7 @@ input[type="radio"].visually-hidden {
   position: relative;
   width: 100%;
   height: auto;
-  min-height: 500px;
+  min-height: 550px;
   margin-top: 20px;
   overflow: hidden;
   border-radius: 20px;
@@ -747,10 +747,17 @@ input[type="radio"].visually-hidden {
 .module__image {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 0;
   width: 2500px;
   height: auto;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  user-drag: none;
 }

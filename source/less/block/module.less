@@ -179,7 +179,7 @@
 
   width: 100%;
   height: auto;
-  min-height: 500px;
+  min-height: 550px;
   margin-top: 20px;
 
   overflow: hidden;
@@ -194,10 +194,14 @@
 .module__image {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 0;
 
   width: 2500px;
   height: auto;
 
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
+
+  user-select: none;
+  touch-action: none;
+  user-drag: none;
 }
