@@ -10,18 +10,6 @@
 <body>
 
 <svg style="display:none;">
-  <symbol viewBox="0 0 14 14" id="cross">
-    <g fill="none" fill-rule="evenodd">
-      <g transform="translate(-45 -402)" fill="currentColor" fill-rule="nonzero" stroke="currentColor">
-        <g transform="translate(46 403)">
-          <path d="M7.061 6l4.72-4.719A.75.75 0 1 0 10.718.22L6 4.939 1.281.219A.75.75 0 1 0 .22 1.282l4.719 4.72-4.72 4.718a.75.75 0 1 0 1.062 1.061l4.72-4.719 4.718 4.72a.748.748 0 0 0 1.061 0 .75.75 0 0 0 0-1.062L7.061 6z"/>
-        </g>
-      </g>
-    </g>
-  </symbol>
-  <symbol viewBox="0 0 10 16" id="next">
-    <g fill="none" fill-rule="evenodd"><g transform="translate(-84 -401)" fill="currentColor" stroke="currentColor"><g transform="translate(84.566 401.992)"><path d="M7.7 7.699l-6.025 6.024a.98.98 0 1 1-1.388-1.387l5.331-5.33-5.33-5.331A.981.981 0 0 1 1.674.287L7.7 6.312a.978.978 0 0 1 0 1.387z"/></g></g></g>
-  </symbol>
   <symbol viewBox="0 0 48 36" id="cam">
     <g fill="none" fill-rule="evenodd"><g
         transform="translate(-891 -247)"><g transform="translate(889 239)"><g
@@ -47,7 +35,7 @@
 @@include('partials/page-footer.html')
 <template id="moduleTemplate">
 
-  <article class="module module--{{ type }} grid__cell grid__cell--{{ size }}" tabindex="0">
+  <article class="module module--{{ type }} grid__cell grid__cell--{{ size }}">
     <div class="module__top">
       <h3 class="module__title">
         {{ title }}
@@ -63,18 +51,6 @@
       </p>
     </div>
     <div class="module__message">{{ description }}</div>
-    <button class="module__close" type="button">
-      <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-        <use xlink:href="#cross"></use>
-      </svg>
-      <span class="visually-hidden">Понятно!</span>
-    </button>
-    <button class="module__next" type="button">
-      <svg width="10" height="16" viewBox="0 0 10 16" xmlns="http://www.w3.org/2000/svg">
-        <use xlink:href="#next"></use>
-      </svg>
-      <span class="visually-hidden">Дальше!</span>
-    </button>
   </article>
 
   <div class="module__picture">
