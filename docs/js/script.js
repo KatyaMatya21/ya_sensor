@@ -132,7 +132,7 @@ imageContainer.addEventListener('pointermove', function (event) {
 
     document.querySelector('body').style.background = 'red';
 
-    var distanse = Math.sqrt(Math.pow(currentPositionX - startPositionX) - Math.pow(currentPositionY - startPositionY));
+    var distanse = Math.sqrt(Math.pow(currentPositionX - startPositionX) + Math.pow(currentPositionY - startPositionY));
 
     document.querySelector('.debug').textContent = distanse;
 
