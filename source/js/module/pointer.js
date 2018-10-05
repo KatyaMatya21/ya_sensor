@@ -6,14 +6,11 @@ var imageWidth = image.offsetWidth;
 
 image.style.left = '0px';
 
-var currentGesture = null;
-var fingers = [];
+var pointerArray = [];
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
-  fingers = [];
-  currentGesture = null;
 };
 
 window.addEventListener('resize', function() {
@@ -21,24 +18,49 @@ window.addEventListener('resize', function() {
 });
 
 imageContainer.addEventListener('pointerdown', function (event) {
-  fingers.push(event.pointerId);
-
   imageContainer.setPointerCapture(event.pointerId);
 
-  currentGesture = {
-    startX: event.x
-  };
+  pointerArray.push({
+    id: event.pointerId,
+    prevPosition: {
+      x: event.x,
+      y: event.y
+    },
+    currentPosition: {
+      x: 0,
+      y: 0
+    }
+  });
+
+  console.log("down");
 });
 
 imageContainer.addEventListener('pointermove', function (event) {
-  if (!currentGesture) {
+  if (pointerArray.length === 0) {
     return
   }
 
-  if (fingers.length > 1) {
+  var index = null;
+
+  for (var i = 0; i < pointerArray.length; i++) {
+    if (pointerArray[i].id === event.pointerId) {
+      index = i;
+      break;
+    }
+  }
+
+  pointerArray[index].currentPosition.x = event.x;
+  pointerArray[index].currentPosition.y = event.y;
+
+  console.log("move");
+  console.log(pointerArray[index].currentPosition.x);
+  console.log(pointerArray[index].currentPosition.y);
+
+  if (pointerArray.length.length > 1) {
 
     // pinch
     document.querySelector('body').style.background = 'red';
+
 
     // rotate
     document.querySelector('body').style.background = 'blue';
@@ -46,7 +68,7 @@ imageContainer.addEventListener('pointermove', function (event) {
   } else {
 
     // move
-    var startX = currentGesture.startX;
+    var startX = pointerArray[index].prevPosition.x;
     var x = event.x;
     var dx = x - startX;
     var left = image.style.left.replace('px', '') * 1;
@@ -62,15 +84,22 @@ imageContainer.addEventListener('pointermove', function (event) {
     }
 
     image.style.left = left + 'px';
-    currentGesture.startX = x;
-
+    pointerArray[index].prevPosition.x = x;
   }
 });
 
 imageContainer.addEventListener('pointerup', function (event) {
-  currentGesture = null;
+  var index = null;
 
-  fingers.splice(fingers.indexOf(event.pointerId), 1);
+  for (var i = 0; i < pointerArray.length; i++) {
+    if (pointerArray[i].id === event.pointerId) {
+      index = i;
+    }
+  }
+
+  pointerArray.splice(pointerArray[index], 1);
+
+  console.log("up");
 });
 
 imageContainer.addEventListener('pointercancel', moveToStartPosition);
