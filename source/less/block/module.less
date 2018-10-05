@@ -188,29 +188,55 @@
 
   width: 100%;
   height: auto;
-  min-height: 550px;
+  min-height: 230px;
   margin-top: 20px;
 
   overflow: hidden;
 
   border-radius: 20px;
 
+  @media (min-width: @mobile-l) {
+    min-height: 300px;
+  }
+
   @media (min-width: @tablet) {
-    margin-top: 30px;
+    min-height: 450px;
+  }
+
+  @media (min-width: @desktop-s) {
+    min-height: 600px;
+  }
+
+  @media (min-width: @desktop) {
+    min-height: 800px;
   }
 }
 
 .module__image {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
 
-  width: 2500px;
+  width: 500px;
   height: auto;
-
-  transform: translateY(-50%);
 
   user-select: none;
   touch-action: none;
   user-drag: none;
+
+  @media (min-width: @mobile-l) {
+    width: 800px;
+  }
+
+  @media (min-width: @tablet) {
+    width: 1250px;
+  }
+
+  @media (min-width: @desktop-s) {
+    width: 1500px;
+  }
+
+  @media (min-width: @desktop) {
+    width: 2200px;
+  }
 }

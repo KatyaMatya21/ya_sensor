@@ -69,14 +69,19 @@ var image = document.querySelector('.module__image');
 var imageWindow = imageContainer.offsetWidth;
 var imageWidth = image.offsetWidth;
 
-image.style.left = '0px';
-
 var pointerArray = [];
 var distancePrev = 0;
+var currentScale = 1;
+
+image.style.left = '0px';
+image.style.transform = "scale(" + currentScale + ")";
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
+
+  imageWindow = imageContainer.offsetWidth;
+  imageWidth = image.offsetWidth;
 };
 
 window.addEventListener('resize', function() {
@@ -97,8 +102,6 @@ imageContainer.addEventListener('pointerdown', function (event) {
       y: event.y
     }
   });
-
-  console.log("down");
 });
 
 imageContainer.addEventListener('pointermove', function (event) {
@@ -118,34 +121,40 @@ imageContainer.addEventListener('pointermove', function (event) {
   pointerArray[index].currentPosition.x = event.x;
   pointerArray[index].currentPosition.y = event.y;
 
-  console.log("move");
-
   if (pointerArray.length > 1) {
+
+    document.querySelector('body').style.background = 'green';
 
     var currentPositionX1 = pointerArray[0].currentPosition.x;
     var currentPositionY1 = pointerArray[0].currentPosition.y;
     var currentPositionX2 = pointerArray[1].currentPosition.x;
     var currentPositionY2 = pointerArray[1].currentPosition.y;
 
-    var distance = Math.sqrt(Math.pow(currentPositionX2 - currentPositionX1) + Math.pow(currentPositionY2 - currentPositionY1));
+    var distance = Math.sqrt(Math.pow((currentPositionX2 - currentPositionX1), 2) + Math.pow((currentPositionY2 - currentPositionY1), 2));
 
     if (distancePrev) {
 
+      var scale = 0.01;
+
       if (distance > distancePrev) {
         document.querySelector('body').style.background = 'red';
+        currentScale += scale;
       } else {
         document.querySelector('body').style.background = 'blue';
+        currentScale -= scale;
+
+        if (currentScale <= 1) {
+          currentScale = 1;
+        }
       }
 
+      image.style.transform = "scale(" + currentScale + ")";
     }
 
     distancePrev = distance;
 
-    document.querySelector('.debug').innerHTML = distancePrev;
-
   } else {
 
-    // move
     var startX = pointerArray[index].prevPosition.x;
     var x = event.x;
     var dx = x - startX;
@@ -176,8 +185,6 @@ imageContainer.addEventListener('pointerup', function (event) {
   }
 
   pointerArray.splice(pointerArray[index], 1);
-
-  console.log("up");
 });
 
 imageContainer.addEventListener('pointercancel', moveToStartPosition);
