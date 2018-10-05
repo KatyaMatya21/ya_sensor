@@ -72,6 +72,7 @@ var imageWidth = image.offsetWidth;
 image.style.left = '0px';
 
 var pointerArray = [];
+var distancePrev = 0;
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
@@ -87,10 +88,6 @@ imageContainer.addEventListener('pointerdown', function (event) {
 
   pointerArray.push({
     id: event.pointerId,
-    startPosition: {
-      x: event.x,
-      y: event.y
-    },
     prevPosition: {
       x: event.x,
       y: event.y
@@ -121,20 +118,30 @@ imageContainer.addEventListener('pointermove', function (event) {
   pointerArray[index].currentPosition.x = event.x;
   pointerArray[index].currentPosition.y = event.y;
 
-  var startPositionX = pointerArray[index].startPosition.x;
-  var startPositionY = pointerArray[index].startPosition.y;
-  var currentPositionX = pointerArray[index].currentPosition.x;
-  var currentPositionY = pointerArray[index].currentPosition.y;
-
   console.log("move");
 
-  if (pointerArray.length.length > 1) {
+  if (pointerArray.length > 1) {
 
-    document.querySelector('body').style.background = 'red';
+    var currentPositionX1 = pointerArray[0].currentPosition.x;
+    var currentPositionY1 = pointerArray[0].currentPosition.y;
+    var currentPositionX2 = pointerArray[1].currentPosition.x;
+    var currentPositionY2 = pointerArray[1].currentPosition.y;
 
-    var distanse = Math.sqrt(Math.pow(currentPositionX - startPositionX) + Math.pow(currentPositionY - startPositionY));
+    var distance = Math.sqrt(Math.pow(currentPositionX2 - currentPositionX1) + Math.pow(currentPositionY2 - currentPositionY1));
 
-    document.querySelector('.debug').textContent = distanse;
+    if (distancePrev) {
+
+      if (distance > distancePrev) {
+        document.querySelector('body').style.background = 'red';
+      } else {
+        document.querySelector('body').style.background = 'blue';
+      }
+
+    }
+
+    var distancePrev = distance;
+
+    document.querySelector('.debug').innerHTML = distancePrev;
 
   } else {
 
