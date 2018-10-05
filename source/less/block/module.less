@@ -240,3 +240,30 @@
     width: 2200px;
   }
 }
+
+.module__indicator {
+  position: absolute;
+  bottom: 3px;
+  left: 20px;
+
+  width: 30%;
+  height: 2px;
+
+  background-color: #000000;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.module__cam-details {
+  .font-size(12);
+  .line-height(14);
+
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+
+  @media (min-width: @tablet) {
+    .font-size(20);
+    .line-height(24);
+  }
+}

@@ -799,3 +799,34 @@ input[type="radio"].visually-hidden {
     width: 2200px;
   }
 }
+.module__indicator {
+  position: absolute;
+  bottom: 3px;
+  left: 20px;
+  width: 30%;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+.module__cam-details {
+  font-size: 12px;
+  font-size: 1rem;
+  line-height: 14px;
+  line-height: 1.1666666666666667rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+@media (min-width: 768px) {
+  .module__cam-details {
+    font-size: 20px;
+    font-size: 1.6666666666666667rem;
+    line-height: 24px;
+    line-height: 2rem;
+  }
+}

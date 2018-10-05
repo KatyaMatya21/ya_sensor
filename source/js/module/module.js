@@ -4,6 +4,7 @@ var template = document.querySelector('#moduleTemplate');
 
 var moduleTemplate = template.content.querySelector('.module');
 var modulePicture = template.content.querySelector('.module__picture');
+var moduleDetails = template.content.querySelector('.module__cam-details');
 
 var data;
 
@@ -48,7 +49,9 @@ for (var i = 0; i < events.length; i++) {
 
     if (events[i].icon === 'cam') {
       var picture = modulePicture.cloneNode(true);
+      var details = moduleDetails.cloneNode(true);
       module.querySelector('.module__message').appendChild(picture);
+      module.querySelector('.module__message').appendChild(details);
     }
 
   }

@@ -1,5 +1,6 @@
 var imageContainer = document.querySelector('.module__picture');
 var image = document.querySelector('.module__image');
+var imageIndicator = document.querySelector('.module__indicator');
 
 var imageWindow = imageContainer.offsetWidth;
 var imageWidth = image.offsetWidth;
@@ -9,11 +10,14 @@ var distancePrev = 0;
 var currentScale = 1;
 
 image.style.left = '0px';
+imageIndicator.style.left = '0px';
 image.style.transform = "scale(" + currentScale + ")";
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
+  imageIndicator.style.left = '0px';
+  image.style.transform = "scale(" + 1 + ")";
 
   imageWindow = imageContainer.offsetWidth;
   imageWidth = image.offsetWidth;
@@ -102,6 +106,7 @@ imageContainer.addEventListener('pointermove', function (event) {
     }
 
     image.style.left = left + 'px';
+
     pointerArray[index].prevPosition.x = x;
   }
 });

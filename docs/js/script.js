@@ -11,6 +11,7 @@ var template = document.querySelector('#moduleTemplate');
 
 var moduleTemplate = template.content.querySelector('.module');
 var modulePicture = template.content.querySelector('.module__picture');
+var moduleDetails = template.content.querySelector('.module__cam-details');
 
 var data;
 
@@ -55,7 +56,9 @@ for (var i = 0; i < events.length; i++) {
 
     if (events[i].icon === 'cam') {
       var picture = modulePicture.cloneNode(true);
+      var details = moduleDetails.cloneNode(true);
       module.querySelector('.module__message').appendChild(picture);
+      module.querySelector('.module__message').appendChild(details);
     }
 
   }
@@ -65,6 +68,7 @@ for (var i = 0; i < events.length; i++) {
 
 var imageContainer = document.querySelector('.module__picture');
 var image = document.querySelector('.module__image');
+var imageIndicator = document.querySelector('.module__indicator');
 
 var imageWindow = imageContainer.offsetWidth;
 var imageWidth = image.offsetWidth;
@@ -74,11 +78,14 @@ var distancePrev = 0;
 var currentScale = 1;
 
 image.style.left = '0px';
+imageIndicator.style.left = '0px';
 image.style.transform = "scale(" + currentScale + ")";
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
+  imageIndicator.style.left = '0px';
+  image.style.transform = "scale(" + 1 + ")";
 
   imageWindow = imageContainer.offsetWidth;
   imageWidth = image.offsetWidth;
@@ -167,6 +174,7 @@ imageContainer.addEventListener('pointermove', function (event) {
     }
 
     image.style.left = left + 'px';
+
     pointerArray[index].prevPosition.x = x;
   }
 });
