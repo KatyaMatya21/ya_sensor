@@ -22,13 +22,17 @@ imageContainer.addEventListener('pointerdown', function (event) {
 
   pointerArray.push({
     id: event.pointerId,
+    startPosition: {
+      x: event.x,
+      y: event.y
+    },
     prevPosition: {
       x: event.x,
       y: event.y
     },
     currentPosition: {
-      x: 0,
-      y: 0
+      x: event.x,
+      y: event.y
     }
   });
 
@@ -52,18 +56,20 @@ imageContainer.addEventListener('pointermove', function (event) {
   pointerArray[index].currentPosition.x = event.x;
   pointerArray[index].currentPosition.y = event.y;
 
+  var startPositionX = pointerArray[index].startPosition.x;
+  var startPositionY = pointerArray[index].startPosition.y;
+  var currentPositionX = pointerArray[index].currentPosition.x;
+  var currentPositionY = pointerArray[index].currentPosition.y;
+
   console.log("move");
-  console.log(pointerArray[index].currentPosition.x);
-  console.log(pointerArray[index].currentPosition.y);
 
   if (pointerArray.length.length > 1) {
 
-    // pinch
     document.querySelector('body').style.background = 'red';
 
+    var distanse = Math.sqrt(Math.pow(currentPositionX - startPositionX) - Math.pow(currentPositionY - startPositionY));
 
-    // rotate
-    document.querySelector('body').style.background = 'blue';
+    document.querySelector('.debug').textContent = distanse;
 
   } else {
 
