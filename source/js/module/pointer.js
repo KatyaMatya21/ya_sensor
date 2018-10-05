@@ -74,7 +74,7 @@ imageContainer.addEventListener('pointermove', function (event) {
 
     }
 
-    var distancePrev = distance;
+    distancePrev = distance;
 
     document.querySelector('.debug').innerHTML = distancePrev;
 
