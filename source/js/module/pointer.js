@@ -58,8 +58,6 @@ imageContainer.addEventListener('pointermove', function (event) {
 
   if (pointerArray.length > 1) {
 
-    document.querySelector('body').style.background = 'green';
-
     var currentPositionX1 = pointerArray[0].currentPosition.x;
     var currentPositionY1 = pointerArray[0].currentPosition.y;
     var currentPositionX2 = pointerArray[1].currentPosition.x;
@@ -72,10 +70,8 @@ imageContainer.addEventListener('pointermove', function (event) {
       var scale = 0.01;
 
       if (distance > distancePrev) {
-        document.querySelector('body').style.background = 'red';
         currentScale += scale;
       } else {
-        document.querySelector('body').style.background = 'blue';
         currentScale -= scale;
 
         if (currentScale <= 1) {
