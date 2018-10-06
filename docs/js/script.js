@@ -70,7 +70,7 @@ var imageContainer = document.querySelector('.module__picture');
 var image = document.querySelector('.module__image');
 var imageIndicator = document.querySelector('.module__indicator');
 var imageScale = document.querySelector('.module__scale strong');
-var imageLight = document.querySelector('.module__light strong');
+var imageBrightness = document.querySelector('.module__light strong');
 
 var imageWindow = imageContainer.offsetWidth;
 var imageWidth = image.offsetWidth;
@@ -83,13 +83,16 @@ image.style.left = '0px';
 imageIndicator.style.left = '0px';
 image.style.transform = "scale(" + currentScale + ")";
 imageScale.innerHTML = 100 + '%';
-imageLight.innerHTML = 100 + '%';
+imageBrightness.innerHTML = 100 + '%';
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
   image.style.left = '0px';
   imageIndicator.style.left = '0px';
   image.style.transform = "scale(" + 1 + ")";
+
+  imageBrightness.innerHTML = '100%';
+  imageScale.innerHTML = '100%';
 
   imageWindow = imageContainer.offsetWidth;
   imageWidth = image.offsetWidth;
@@ -104,6 +107,10 @@ imageContainer.addEventListener('pointerdown', function (event) {
 
   pointerArray.push({
     id: event.pointerId,
+    startPosition: {
+      x: event.x,
+      y: event.y
+    },
     prevPosition: {
       x: event.x,
       y: event.y
@@ -139,6 +146,7 @@ imageContainer.addEventListener('pointermove', function (event) {
     var currentPositionX2 = pointerArray[1].currentPosition.x;
     var currentPositionY2 = pointerArray[1].currentPosition.y;
 
+    // pinch
     var distance = Math.sqrt(Math.pow((currentPositionX2 - currentPositionX1), 2) + Math.pow((currentPositionY2 - currentPositionY1), 2));
 
     if (distancePrev) {
@@ -149,7 +157,6 @@ imageContainer.addEventListener('pointermove', function (event) {
         currentScale += scale;
       } else {
         currentScale -= scale;
-
         if (currentScale <= 1) {
           currentScale = 1;
         }
@@ -161,8 +168,30 @@ imageContainer.addEventListener('pointermove', function (event) {
 
     distancePrev = distance;
 
+    // rotate
+    var startPositionX1 = pointerArray[0].startPosition.x;
+    var startPositionY1 = pointerArray[0].startPosition.y;
+    var startPositionX2 = pointerArray[1].startPosition.x;
+    var startPositionY2 = pointerArray[1].startPosition.y;
+
+    var startAngle = Math.atan2(startPositionY1 - startPositionY2, startPositionX1 - startPositionX2);
+    var currentAngle = Math.atan2(currentPositionY1 - currentPositionY2, currentPositionX1 - currentPositionX2);
+    var angleChange = (currentAngle - startAngle) * 180 / Math.PI;
+
+    if (angleChange < 0) {
+      angleChange += 360;
+    }
+
+    var brightness = angleChange / 360 * 100;
+
+    image.style.filter = 'brightness(' + brightness + '%)';
+    imageBrightness.innerHTML = Math.ceil(brightness) + '%';
+
+    console.log(brightness);
+
   } else {
 
+    // move
     var startX = pointerArray[index].prevPosition.x;
     var x = event.x;
     var dx = x - startX;
@@ -179,7 +208,6 @@ imageContainer.addEventListener('pointermove', function (event) {
     }
 
     image.style.left = left + 'px';
-
     pointerArray[index].prevPosition.x = x;
   }
 });
