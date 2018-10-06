@@ -79,16 +79,18 @@ var imageIndicatorWidth = imageIndicator.offsetWidth;
 var pointerArray = [];
 var distancePrev = 0;
 var currentScale = 1;
+var currentBrightness = 100;
+var prevAngleChange = 0;
 
 image.style.left = '0px';
 imageIndicator.style.left = '0px';
 
 image.style.transform = "scale(" + currentScale + ")";
 
-imageScale.innerHTML = 100 + '%';
-imageBrightness.innerHTML = 100 + '%';
+imageScale.innerHTML = currentScale * 100 + '%';
+imageBrightness.innerHTML = currentBrightness + '%';
 
-var moveToStartPosition = function() {
+var moveToStartPosition = function () {
   imageWindow = imageContainer.offsetWidth;
   imageWidth = image.offsetWidth;
   imageIndicatorWidth = imageIndicator.offsetWidth;
@@ -102,11 +104,119 @@ var moveToStartPosition = function() {
   imageScale.innerHTML = '100%';
 };
 
+var getDistance = function (p1, p2) {
+  return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
+};
 
-window.addEventListener('resize', function() {
+var getAngle = function (p1, p2) {
+  return Math.atan2(p1.y - p2.y, p1.x - p2.x);
+};
+
+var onMove = function (index) {
+  var startX = pointerArray[index].prevPosition.x;
+  var x = event.x;
+  var dx = x - startX;
+
+  var left = image.style.left.replace('px', '') * 1;
+  var leftIndicator = imageIndicator.style.left.replace('px', '') * 1;
+
+  var dleft = (imageWindow - imageIndicatorWidth) / (imageWidth - imageWindow);
+
+  dx > 0 ? left += Math.abs(dx) : left -= Math.abs(dx);
+  dx > 0 ? leftIndicator -= Math.abs(dx) * dleft : leftIndicator += Math.abs(dx) * dleft;
+
+  if (left > 0) {
+    left = 0;
+    leftIndicator = 0;
+  }
+
+  if (left < imageWindow - imageWidth) {
+    left = imageWindow - imageWidth;
+    leftIndicator = imageWindow - imageIndicatorWidth;
+  }
+
+  image.style.left = left + 'px';
+  pointerArray[index].prevPosition.x = x;
+
+  imageIndicator.style.left = leftIndicator + 'px';
+};
+
+var onPinch = function () {
+
+  var pinchTreshold = 30;
+
+  var distance = getDistance(pointerArray[0].currentPosition, pointerArray[1].currentPosition);
+  var distanceStart = getDistance(pointerArray[0].startPosition, pointerArray[1].startPosition);
+
+  if (Math.abs(distance - distanceStart) < pinchTreshold) {
+    return;
+  }
+
+  if (distancePrev) {
+    var scale = 0.03;
+
+    if (distance > distancePrev) {
+      currentScale += scale;
+    } else {
+      currentScale -= scale;
+      if (currentScale <= 1) {
+        currentScale = 1;
+      }
+    }
+
+    image.style.transform = "scale(" + currentScale + ")";
+    imageScale.innerHTML = Math.ceil(currentScale * 100) + '%';
+  }
+
+  distancePrev = distance;
+};
+
+var onRotate = function () {
+
+  var rotateTreshold = 0.25;
+
+  var startAngle = getAngle(pointerArray[0].startPosition, pointerArray[1].startPosition);
+  var currentAngle = getAngle(pointerArray[0].currentPosition, pointerArray[1].currentPosition);
+  var angleChange = (currentAngle - startAngle) * 180 / Math.PI;
+
+  if (prevAngleChange) {
+    //console.log( Math.abs(startAngle-currentAngle) );
+    if (Math.abs(startAngle - currentAngle) < rotateTreshold) {
+      return;
+    }
+
+    if (angleChange < 0) {
+      angleChange += 360;
+    }
+
+    //var brightness = 100 - (angleChange / 360 * 100);
+
+    if (prevAngleChange < angleChange) {
+      currentBrightness += 5;
+    } else {
+      currentBrightness -= 5;
+    }
+
+    if (currentBrightness > 100) {
+      currentBrightness = 100;
+    }
+
+    if (currentBrightness < 0) {
+      currentBrightness = 0;
+    }
+
+    image.style.filter = 'brightness(' + currentBrightness + '%)';
+    imageBrightness.innerHTML = Math.ceil(currentBrightness) + '%';
+
+  }
+
+  prevAngleChange = angleChange;
+
+};
+
+window.addEventListener('resize', function () {
   moveToStartPosition();
 });
-
 
 imageContainer.addEventListener('pointerdown', function (event) {
   imageContainer.setPointerCapture(event.pointerId);
@@ -128,14 +238,12 @@ imageContainer.addEventListener('pointerdown', function (event) {
   });
 });
 
-
 imageContainer.addEventListener('pointermove', function (event) {
   if (pointerArray.length === 0) {
     return
   }
 
   var index = null;
-
   for (var i = 0; i < pointerArray.length; i++) {
     if (pointerArray[i].id === event.pointerId) {
       index = i;
@@ -148,84 +256,16 @@ imageContainer.addEventListener('pointermove', function (event) {
 
   if (pointerArray.length > 1) {
 
-    var startPositionX1 = pointerArray[0].startPosition.x;
-    var startPositionY1 = pointerArray[0].startPosition.y;
-    var startPositionX2 = pointerArray[1].startPosition.x;
-    var startPositionY2 = pointerArray[1].startPosition.y;
+    onPinch();
 
-    var currentPositionX1 = pointerArray[0].currentPosition.x;
-    var currentPositionY1 = pointerArray[0].currentPosition.y;
-    var currentPositionX2 = pointerArray[1].currentPosition.x;
-    var currentPositionY2 = pointerArray[1].currentPosition.y;
-
-    // pinch
-    var distance = Math.sqrt(Math.pow((currentPositionX2 - currentPositionX1), 2) + Math.pow((currentPositionY2 - currentPositionY1), 2));
-
-    if (distancePrev) {
-
-      var scale = 0.02;
-
-      if (distance > distancePrev) {
-        currentScale += scale;
-      } else {
-        currentScale -= scale;
-        if (currentScale <= 1) {
-          currentScale = 1;
-        }
-      }
-
-      image.style.transform = "scale(" + currentScale + ")";
-      imageScale.innerHTML = Math.ceil(currentScale * 100) + '%';
-    }
-
-    distancePrev = distance;
-
-    // rotate
-    var startAngle = Math.atan2(startPositionY1 - startPositionY2, startPositionX1 - startPositionX2);
-    var currentAngle = Math.atan2(currentPositionY1 - currentPositionY2, currentPositionX1 - currentPositionX2);
-    var angleChange = (currentAngle - startAngle) * 180 / Math.PI;
-
-    if (angleChange < 0) {
-      angleChange += 360;
-    }
-
-    var brightness = 100 - (angleChange / 360 * 100);
-
-    image.style.filter = 'brightness(' + brightness + '%)';
-    imageBrightness.innerHTML = Math.ceil(brightness) + '%';
+    onRotate();
 
   } else {
 
-    // move
-    var startX = pointerArray[index].prevPosition.x;
-    var x = event.x;
-    var dx = x - startX;
+    onMove(index);
 
-    var left = image.style.left.replace('px', '') * 1;
-    var leftIndicator = imageIndicator.style.left.replace('px', '') * 1;
-
-    var dleft = (imageWindow - imageIndicatorWidth) / (imageWidth - imageWindow);
-
-    dx > 0 ? left += Math.abs(dx) : left -= Math.abs(dx);
-    dx > 0 ? leftIndicator -= Math.abs(dx) * dleft : leftIndicator += Math.abs(dx) * dleft;
-
-    if (left > 0) {
-      left = 0;
-      leftIndicator = 0;
-    }
-
-    if (left < imageWindow - imageWidth) {
-      left = imageWindow - imageWidth;
-      leftIndicator = imageWindow - imageIndicatorWidth;
-    }
-
-    image.style.left = left + 'px';
-    pointerArray[index].prevPosition.x = x;
-
-    imageIndicator.style.left = leftIndicator + 'px';
   }
 });
-
 
 imageContainer.addEventListener('pointerup', function (event) {
   var index = null;
@@ -238,7 +278,6 @@ imageContainer.addEventListener('pointerup', function (event) {
 
   pointerArray.splice(pointerArray[index], 1);
 });
-
 
 imageContainer.addEventListener('pointercancel', moveToStartPosition);
 
