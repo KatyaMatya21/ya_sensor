@@ -105,7 +105,7 @@ var onPinch = function () {
 
 var onRotate = function () {
 
-  var rotateTreshold = 0.25;
+  var rotateTreshold = 0.5;
 
   var startAngle = getAngle(pointerArray[0].startPosition, pointerArray[1].startPosition);
   var currentAngle = getAngle(pointerArray[0].currentPosition, pointerArray[1].currentPosition);
@@ -124,9 +124,9 @@ var onRotate = function () {
     //var brightness = 100 - (angleChange / 360 * 100);
 
     if (prevAngleChange < angleChange) {
-      currentBrightness += 2;
+      currentBrightness += 1;
     } else {
-      currentBrightness -= 2;
+      currentBrightness -= 1;
     }
 
     if (currentBrightness > 100) {
