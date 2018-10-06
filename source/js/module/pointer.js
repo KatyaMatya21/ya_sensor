@@ -6,6 +6,7 @@ var imageBrightness = document.querySelector('.module__light strong');
 
 var imageWindow = imageContainer.offsetWidth;
 var imageWidth = image.offsetWidth;
+var imageIndicatorWidth = imageIndicator.offsetWidth;
 
 var pointerArray = [];
 var distancePrev = 0;
@@ -13,26 +14,31 @@ var currentScale = 1;
 
 image.style.left = '0px';
 imageIndicator.style.left = '0px';
+
 image.style.transform = "scale(" + currentScale + ")";
+
 imageScale.innerHTML = 100 + '%';
 imageBrightness.innerHTML = 100 + '%';
 
 var moveToStartPosition = function() {
   imageWindow = imageContainer.offsetWidth;
+  imageWidth = image.offsetWidth;
+  imageIndicatorWidth = imageIndicator.offsetWidth;
+
   image.style.left = '0px';
   imageIndicator.style.left = '0px';
+
   image.style.transform = "scale(" + 1 + ")";
 
   imageBrightness.innerHTML = '100%';
   imageScale.innerHTML = '100%';
-
-  imageWindow = imageContainer.offsetWidth;
-  imageWidth = image.offsetWidth;
 };
+
 
 window.addEventListener('resize', function() {
   moveToStartPosition();
 });
+
 
 imageContainer.addEventListener('pointerdown', function (event) {
   imageContainer.setPointerCapture(event.pointerId);
@@ -54,6 +60,7 @@ imageContainer.addEventListener('pointerdown', function (event) {
   });
 });
 
+
 imageContainer.addEventListener('pointermove', function (event) {
   if (pointerArray.length === 0) {
     return
@@ -73,6 +80,11 @@ imageContainer.addEventListener('pointermove', function (event) {
 
   if (pointerArray.length > 1) {
 
+    var startPositionX1 = pointerArray[0].startPosition.x;
+    var startPositionY1 = pointerArray[0].startPosition.y;
+    var startPositionX2 = pointerArray[1].startPosition.x;
+    var startPositionY2 = pointerArray[1].startPosition.y;
+
     var currentPositionX1 = pointerArray[0].currentPosition.x;
     var currentPositionY1 = pointerArray[0].currentPosition.y;
     var currentPositionX2 = pointerArray[1].currentPosition.x;
@@ -83,7 +95,7 @@ imageContainer.addEventListener('pointermove', function (event) {
 
     if (distancePrev) {
 
-      var scale = 0.01;
+      var scale = 0.02;
 
       if (distance > distancePrev) {
         currentScale += scale;
@@ -101,11 +113,6 @@ imageContainer.addEventListener('pointermove', function (event) {
     distancePrev = distance;
 
     // rotate
-    var startPositionX1 = pointerArray[0].startPosition.x;
-    var startPositionY1 = pointerArray[0].startPosition.y;
-    var startPositionX2 = pointerArray[1].startPosition.x;
-    var startPositionY2 = pointerArray[1].startPosition.y;
-
     var startAngle = Math.atan2(startPositionY1 - startPositionY2, startPositionX1 - startPositionX2);
     var currentAngle = Math.atan2(currentPositionY1 - currentPositionY2, currentPositionX1 - currentPositionX2);
     var angleChange = (currentAngle - startAngle) * 180 / Math.PI;
@@ -114,12 +121,10 @@ imageContainer.addEventListener('pointermove', function (event) {
       angleChange += 360;
     }
 
-    var brightness = angleChange / 360 * 100;
+    var brightness = 100 - (angleChange / 360 * 100);
 
     image.style.filter = 'brightness(' + brightness + '%)';
     imageBrightness.innerHTML = Math.ceil(brightness) + '%';
-
-    console.log(brightness);
 
   } else {
 
@@ -127,22 +132,32 @@ imageContainer.addEventListener('pointermove', function (event) {
     var startX = pointerArray[index].prevPosition.x;
     var x = event.x;
     var dx = x - startX;
+
     var left = image.style.left.replace('px', '') * 1;
+    var leftIndicator = imageIndicator.style.left.replace('px', '') * 1;
+
+    var dleft = (imageWindow - imageIndicatorWidth) / (imageWidth - imageWindow);
 
     dx > 0 ? left += Math.abs(dx) : left -= Math.abs(dx);
+    dx > 0 ? leftIndicator -= Math.abs(dx) * dleft : leftIndicator += Math.abs(dx) * dleft;
 
     if (left > 0) {
       left = 0;
+      leftIndicator = 0;
     }
 
     if (left < imageWindow - imageWidth) {
       left = imageWindow - imageWidth;
+      leftIndicator = imageWindow - imageIndicatorWidth;
     }
 
     image.style.left = left + 'px';
     pointerArray[index].prevPosition.x = x;
+
+    imageIndicator.style.left = leftIndicator + 'px';
   }
 });
+
 
 imageContainer.addEventListener('pointerup', function (event) {
   var index = null;
@@ -155,5 +170,6 @@ imageContainer.addEventListener('pointerup', function (event) {
 
   pointerArray.splice(pointerArray[index], 1);
 });
+
 
 imageContainer.addEventListener('pointercancel', moveToStartPosition);
