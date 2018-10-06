@@ -22,6 +22,9 @@ image.style.transform = "scale(" + currentScale + ")";
 imageScale.innerHTML = currentScale * 100 + '%';
 imageBrightness.innerHTML = currentBrightness + '%';
 
+/**
+ * Moves system to start position
+ */
 var moveToStartPosition = function () {
   imageWindow = imageContainer.offsetWidth;
   imageWidth = image.offsetWidth;
@@ -36,14 +39,30 @@ var moveToStartPosition = function () {
   imageScale.innerHTML = '100%';
 };
 
+/**
+ * Calculates distance
+ * @param p1
+ * @param p2
+ * @returns {number}
+ */
 var getDistance = function (p1, p2) {
   return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
 };
 
+/**
+ * Calculates angle
+ * @param p1
+ * @param p2
+ * @returns {number}
+ */
 var getAngle = function (p1, p2) {
   return Math.atan2(p1.y - p2.y, p1.x - p2.x);
 };
 
+/**
+ * Moves picture
+ * @param index
+ */
 var onMove = function (index) {
   var startX = pointerArray[index].prevPosition.x;
   var x = event.x;
@@ -73,6 +92,9 @@ var onMove = function (index) {
   imageIndicator.style.left = leftIndicator + 'px';
 };
 
+/**
+ * Pinches zoom
+ */
 var onPinch = function () {
 
   var pinchTreshold = 30;
@@ -103,6 +125,9 @@ var onPinch = function () {
   distancePrev = distance;
 };
 
+/**
+ * Rotates brightness
+ */
 var onRotate = function () {
 
   var rotateTreshold = 0.5;
@@ -112,7 +137,6 @@ var onRotate = function () {
   var angleChange = (currentAngle - startAngle) * 180 / Math.PI;
 
   if (prevAngleChange) {
-    //console.log( Math.abs(startAngle-currentAngle) );
     if (Math.abs(startAngle - currentAngle) < rotateTreshold) {
       return;
     }
@@ -120,8 +144,6 @@ var onRotate = function () {
     if (angleChange < 0) {
       angleChange += 360;
     }
-
-    //var brightness = 100 - (angleChange / 360 * 100);
 
     if (prevAngleChange < angleChange) {
       currentBrightness += 1;
@@ -146,10 +168,16 @@ var onRotate = function () {
 
 };
 
+/**
+ * EventListener on window resize
+ */
 window.addEventListener('resize', function () {
   moveToStartPosition();
 });
 
+/**
+ * EventListener on pointerdown
+ */
 imageContainer.addEventListener('pointerdown', function (event) {
   imageContainer.setPointerCapture(event.pointerId);
 
@@ -170,6 +198,9 @@ imageContainer.addEventListener('pointerdown', function (event) {
   });
 });
 
+/**
+ * EventListener on pointermove
+ */
 imageContainer.addEventListener('pointermove', function (event) {
   if (pointerArray.length === 0) {
     return
@@ -199,6 +230,9 @@ imageContainer.addEventListener('pointermove', function (event) {
   }
 });
 
+/**
+ * EventListener on pointerup
+ */
 imageContainer.addEventListener('pointerup', function (event) {
   var index = null;
 
@@ -211,4 +245,7 @@ imageContainer.addEventListener('pointerup', function (event) {
   pointerArray.splice(pointerArray[index], 1);
 });
 
+/**
+ * EventListener on pointercancel
+ */
 imageContainer.addEventListener('pointercancel', moveToStartPosition);

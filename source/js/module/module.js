@@ -19,12 +19,23 @@ if (xhr.status != 200) {
 
 var events = data.events;
 
+/**
+ * Creates element from html
+ * @param htmlString
+ * @returns {Node}
+ */
 function createElementFromHTML(htmlString) {
   var div = document.createElement('div');
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 }
 
+/**
+ * Parses template and replaces parameters
+ * @param template
+ * @param variables
+ * @returns {*}
+ */
 function parseTemplate(template, variables) {
   var result = template.outerHTML;
   Object.keys(variables).forEach(function (key) {
@@ -53,7 +64,6 @@ for (var i = 0; i < events.length; i++) {
       module.querySelector('.module__message').appendChild(picture);
       module.querySelector('.module__message').appendChild(details);
     }
-
   }
 
   grid.appendChild(module);
