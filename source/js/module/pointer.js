@@ -124,9 +124,9 @@ var onRotate = function () {
     //var brightness = 100 - (angleChange / 360 * 100);
 
     if (prevAngleChange < angleChange) {
-      currentBrightness += 5;
+      currentBrightness += 2;
     } else {
-      currentBrightness -= 5;
+      currentBrightness -= 2;
     }
 
     if (currentBrightness > 100) {
